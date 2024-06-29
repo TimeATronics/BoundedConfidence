@@ -1,0 +1,58 @@
+1. Structure for a Cell:
+ - Opinion [0 - 1]
+ - Position:
+  * X coord
+  * Y coord
+
+  - Function: Neighbors (von Neumann) (4 neighbors)
+   - [
+    (x + 1, y),
+    (x, y + 1),
+    (x - 1, y),
+    (x, y - 1)
+    ]
+   * Periodic Boundary Conditions
+
+2. Population Grid:
+  - Row Size
+  - Column Size
+  - Learning Rate (k)
+  - Confidence Threshold (d)
+
+  * Initialize the grid
+   - Iteratively initialize cell objects for every (x, y) permutation
+   - Randomly assign opinion values to each cell
+
+  * ChooseARandomCell (Function)
+  
+3. BC_Model:
+  - Initialize a population grid (object)
+  For n time steps:
+  - Choose a random cell:
+      - Get its neighbors
+      - Choose 1 of the 4 neighbors randomly
+      x1 = cell1.opinion
+      x2 = cell2.opinion
+      if abs(x1 - x2) < d:
+        x1_new = x1 + k*(x2 - x1)
+        x2_new = x2 + k*(x1 - x2)
+
+        cell1.opinion = x1_new
+        cell2.opinion = x2_new
+
+dict = [(0,0): 1, (0,1): 0.5, ....]
+
+y_axis = dict.keys()
+
+k = 0.3
+d = 0.6
+
+cell1: (10, 10) = 0.5
+cell2: (11, 10) = 0.9
+
+x1 = 0.62
+x2 = 0.78
+
+(10, 11)
+(9, 10)
+(10, 9)
