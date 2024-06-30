@@ -1,28 +1,22 @@
+import random
+
 class Cell:
-    xlimit = 99
-    ylimit = 99
-    def __init__(self, op, pos):
-        self.op = 0
-        self.posx = 0
-        self.posy = 0
-    def get_neighbors(self):
-        if (self.posx != 99) and (self.posy != 99):
-            return [[self.posx + 1, self.posy], [self.posx, self.posy + 1], [self.posx - 1, self.posy], [self.posx, self.posy - 1]]
-        elif (self.posx == 99) and (self.posy != 99):
-            return [[self.posx + 1, self.posy], [self.posx, self.posy + 1], [self.posx - 1, self.posy], [self.posx, self.posy - 1]]
-        elif (self.posx != 99) and (self.posy == 99):
-            return [[self.posx + 1, self.posy], [self.posx, self.posy + 1], [self.posx - 1, self.posy], [self.posx, self.posy - 1]]
-        elif (self.posx == 99) and (self.posy == 99):
-            return [[self.posx + 1, self.posy], [self.posx, self.posy + 1], [self.posx - 1, self.posy], [self.posx, self.posy - 1]]
+    """ Each cell in the population grid """
+    def __init__(self, op, pos, grid_size):
+        self.op = op
+        self.posx = pos[0]
+        self.posy = pos[1]
+        self.grid_size = grid_size
 
-class Population:
-    def __init__(self, size):
-        size = 100
-    def chooseRandomCell(self):
-        return 1
-#test
-def main():
-    pop_size = 100
+    def getNeighbors(self):
+        row, col = self.posx, self.posy
+        shifts = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        neighbors = []
+        for dr, dc in shifts:
+            nr = (row + dr) % self.grid_size
+            nc = (col + dc) % self.grid_size
+            neighbors.append((nr, nc))
+        return neighbors
 
-if __name__ == "__main__":
-    main()
+c1 = Cell(0.5, [0, 10], 100)
+print(c1.getNeighbors())
