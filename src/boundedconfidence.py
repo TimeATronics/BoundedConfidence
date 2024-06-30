@@ -23,10 +23,12 @@ class Cell:
 grid_size = 30
 learning_rate = 0.25
 confidence_threshold = 0.5
+
+tolerance = 0.05
 grid = {}
 for row in range(grid_size):
     for col in range(grid_size):
-        grid[(row, col)] = Cell(round(random.uniform(0, 1), 3), [row, col], grid_size)
+        grid[(row, col)] = Cell(round(random.uniform(0, 1), 2), [row, col], grid_size)
 
 #for i, j in list(grid.items()):
 #    print(i, ": ", j.op)
@@ -57,14 +59,27 @@ for t in range(time_steps):
     #print((cell1.posx, cell1.posy), ": ", cell1.op, (cell2.posx, cell2.posy), ": ", cell2.op)
     x1 = cell1.op
     x2 = cell2.op
-    if (abs(x1 - x2) < confidence_threshold):
+    if (abs(x1 - x2) < confidence_threshold - tolerance * 2):
         x1_new = x1 + learning_rate * (x2 - x1)
         x2_new = x2 + learning_rate * (x1 - x2)
-        cell1.op = round(x1_new, 3)
-        cell2.op = round(x2_new, 3)
+        cell1.op = round(x1_new, 2)
+        cell2.op = round(x2_new, 2)
+    # Negative Influence:
+    elif (abs(x1 - x2) > confidence_threshold + tolerance * 2):
+        if (x1 > x2):
+            x1_new = (x1 + learning_rate * (x1 - x2) * (1 - x1))
+            x2_new = (x2 + learning_rate * (x2 - x1) * x2)
+            cell1.op = round(x1_new, 2)
+            cell2.op = round(x2_new, 2)
+        else:
+            x1_new = (x1 + learning_rate * (x1 - x2) * x1)
+            x2_new = (x2 + learning_rate * (x2 - x1) * (1 - x2))
+            cell1.op = round(x1_new, 2)
+            cell2.op = round(x2_new, 2)
     #print((cell1.posx, cell1.posy), ": ", cell1.op, (cell2.posx, cell2.posy), ": ", cell2.op)
     #print()
 
+# Todo: familiar cells
 # Visualization
 for row in range(len(vis)):
     for col in range(len(vis[0])):
