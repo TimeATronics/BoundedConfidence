@@ -1,4 +1,6 @@
 import random
+import matplotlib.pyplot as plt
+import numpy as np
 
 class Cell:
     """ Each cell in the population grid """
@@ -18,22 +20,41 @@ class Cell:
             neighbors.append((nr, nc))
         return neighbors
 
-grid_size = 10
-learning_rate = 0.3
-confidence_threshold = 0.4
+grid_size = 30
+learning_rate = 0.25
+confidence_threshold = 0.5
 grid = {}
 for row in range(grid_size):
     for col in range(grid_size):
         grid[(row, col)] = Cell(round(random.uniform(0, 1), 3), [row, col], grid_size)
 
-time_steps = 10
+#for i, j in list(grid.items()):
+#    print(i, ": ", j.op)
+
+vis = [[0 for x in range(grid_size)] for y in range(grid_size)]
+for row in range(len(vis)):
+    for col in range(len(vis[0])):
+        vis[row][col] = grid.get((row, col)).op
+plt.clf()
+plt.imshow(vis, origin='lower')
+plt.show()
+
+time_steps = 10000
 for t in range(time_steps):
     pos1, cell1 = random.choice(list(grid.items()))
     neighbors = cell1.getNeighbors()
+    '''
+    # Non-spatial:
+    pos2, cell2 = random.choice(list(grid.items()))
+    if pos2 == pos1:
+        while(pos1 == pos2):
+            pos2, cell2 = random.choice(list(grid.items()))
+    '''
+    # Spatial:
     pos2 = random.choice(neighbors)
     cell2 = grid[pos2]
-    print("t = ", t)
-    print((cell1.posx, cell1.posy), ": ", cell1.op, (cell2.posx, cell2.posy), ": ", cell2.op)
+    #print("t = ", t)
+    #print((cell1.posx, cell1.posy), ": ", cell1.op, (cell2.posx, cell2.posy), ": ", cell2.op)
     x1 = cell1.op
     x2 = cell2.op
     if (abs(x1 - x2) < confidence_threshold):
@@ -41,5 +62,13 @@ for t in range(time_steps):
         x2_new = x2 + learning_rate * (x1 - x2)
         cell1.op = round(x1_new, 3)
         cell2.op = round(x2_new, 3)
-    print((cell1.posx, cell1.posy), ": ", cell1.op, (cell2.posx, cell2.posy), ": ", cell2.op)
-    print()
+    #print((cell1.posx, cell1.posy), ": ", cell1.op, (cell2.posx, cell2.posy), ": ", cell2.op)
+    #print()
+
+# Visualization
+for row in range(len(vis)):
+    for col in range(len(vis[0])):
+        vis[row][col] = grid.get((row, col)).op
+plt.clf()
+plt.imshow(vis, origin='lower')
+plt.show()
