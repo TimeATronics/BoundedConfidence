@@ -1,1 +1,1 @@
-# BoundedConfidence
+# Bounded Confidence Model (Opinion Dynamics)
